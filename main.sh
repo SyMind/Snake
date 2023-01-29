@@ -6,28 +6,28 @@ DisFrame() {
 	trap "stop=true" 10
 	while ! $stop;do 
 		for ((i=1;i<=cols;i++));do 
-			echo -ne "\033[1;${i}H\033[4$((RANDOM%6+1))m \033[0m"
+			printf "\033[1;${i}H\033[4$((RANDOM%6+1))m \033[0m"
 		done
 		for ((i=2;i<=lines;i++));do 
-			echo -ne "\033[${i};${cols}H\033[4$((RANDOM%6+1))m \033[0m"
+			printf "\033[${i};${cols}H\033[4$((RANDOM%6+1))m \033[0m"
 		done
 		for ((i=cols-1;i>=1;i--));do 
-			echo -ne "\033[${lines};${i}H\033[4$((RANDOM%6+1))m \033[0m"
+			printf "\033[${lines};${i}H\033[4$((RANDOM%6+1))m \033[0m"
 		done
 		for ((i=lines-1;i>=2;i--));do 
-			echo -ne "\033[${i};1H\033[4$((RANDOM%6+1))m \033[0m"
+			printf "\033[${i};1H\033[4$((RANDOM%6+1))m \033[0m"
 		done
 		for ((i=2;i<=cols-1;i++));do 
-			echo -ne "\033[2;${i}H\033[4$((RANDOM%6+1))m \033[0m"
+			printf "\033[2;${i}H\033[4$((RANDOM%6+1))m \033[0m"
 		done
 		for ((i=2;i<=lines-1;i++));do 
-			echo -ne "\033[${i};$[cols-1]H\033[4$((RANDOM%6+1))m \033[0m"
+			printf "\033[${i};$[cols-1]H\033[4$((RANDOM%6+1))m \033[0m"
 		done
 		for ((i=cols-2;i>=2; i--));do 
-			echo -ne "\033[$[lines-1];${i}H\033[4$((RANDOM%6+1))m \033[0m"
+			printf "\033[$[lines-1];${i}H\033[4$((RANDOM%6+1))m \033[0m"
 		done
 		for ((i=lines-2;i>=2;i--));do 
-			echo -ne "\033[${i};2H\033[4$((RANDOM%6+1))m \033[0m"
+			printf "\033[${i};2H\033[4$((RANDOM%6+1))m \033[0m"
 		done
 		sleep 0.1
 	done
@@ -48,15 +48,15 @@ e='&&&&&  &&    & &       & &   & &&&&&&      &&&& &       & &             & &&&
 
 abcde=(a b c d e)
 for ((i=0;i<5;i++));do
-	eval echo -ne "\"\033[$(($[lines/2-6]+$i));$[cols/2-41]H\033[1;5;32m\$${abcde[i]}\033[0m\""
+	eval printf "\"\033[$(($[lines/2-6]+$i));$[cols/2-41]H\033[1;5;32m\$${abcde[i]}\033[0m\""
 	sleep 0.1
 done
 
 i=1
 col=$[cols/2-17]
 while [[ $i -le 35 ]];do
-	echo -ne "\033[$[lines/2+1];${col}H\033[45m \e[0m"
-	echo -ne "\033[$[lines/2+3];${col}H\033[45m \e[0m"
+	printf "\033[$[lines/2+1];${col}H\033[45m \e[0m"
+	printf "\033[$[lines/2+3];${col}H\033[45m \e[0m"
 	sleep 0
 	(( i+=1 ))
 	(( col+=1 ))
@@ -66,8 +66,8 @@ strings="Made by SyMind"
 col=$[cols/2-6]
 for ((a=0;a<=${#strings}-1;a++));do
 	for ((i=$[cols-2]; i>=$col; i--));do
-		echo -ne "\033[$[lines/2+2];${i}H\033[1;33m${strings:a:1} \033[0m"
-		[[ $i -ne $col ]] && echo -ne "\033[$[lines/2+2];${i}H\033[1;$33m \033[0m"
+		printf "\033[$[lines/2+2];${i}H\033[1;33m${strings:a:1} \033[0m"
+		[[ $i -ne $col ]] && printf "\033[$[lines/2+2];${i}H\033[1;$33m \033[0m"
 	done	
 	let col++
 done
@@ -77,7 +77,7 @@ while true;do
 		kill -10 ${DisFramePid} &>/dev/null
 		break
 	}
-	echo -ne "\033[$[lines/2+5];$[cols/2-10]H\033[1;31mAre You Ready ? [Y/N]"
+	printf "\033[$[lines/2+5];$[cols/2-10]H\033[1;31mAre You Ready ? [Y/N]"
 	read -s -n 1 ch
 	ch=$(echo ${ch} | tr 'A-Z' 'a-z')
 done
@@ -135,8 +135,8 @@ height=$((boundary_inner_d-boundary_inner_u))
 # 方块的高为1，宽为2
 # 参数列表：纵向坐标，横向坐标，颜色
 drawBlock() {
-	echo -ne "\033[$1;$2H\033[$3m \033[0m"
-	echo -ne "\033[$1;$(($2+1))H\033[$3m \033[0m"
+	printf "\033[$1;$2H\033[$3m \033[0m"
+	printf "\033[$1;$(($2+1))H\033[$3m \033[0m"
 }
 
 # 获取食物
@@ -212,18 +212,18 @@ showGameOver() {
 	echo -e "\033[$((line_posi + 3 ));${col_posi}H\033[1;31m|                                 |\033[0m"
  	echo -e "\033[$((line_posi + 4 ));${col_posi}H\033[1;31m-----------------------------------\033[0m"
 	tput cnorm
-	echo -ne "\033[$((boundary_d+1));$((boundary_r+1))H\n\033[0m"
+	printf "\033[$((boundary_d+1));$((boundary_r+1))H\n\033[0m"
 }
 
 # 速度信息
 printSpeed() {
-	echo -ne "\033[$((boundary_u+10));$((boundary_r+3))\
+	printf "\033[$((boundary_u+10));$((boundary_r+3))\
 		H\033[42m\033[31mSpeed\033[0m  \033[1;34m$game_speed \033[0m"
 }
 
 # 得分信息
 printScore() {
-	echo -ne "\033[$((boundary_u+8));$((boundary_r+3))\
+	printf "\033[$((boundary_u+8));$((boundary_r+3))\
 		H\033[43m\033[31mScore\033[0m  \033[1;34m$game_score\033[0m"
 	
 	# 更新速度
