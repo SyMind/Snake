@@ -180,7 +180,12 @@ controlGame() {
 	# 阻止回调
 	stty -echo
 	speed=$(printf "%.5f" `echo "scale=5;1/$game_speed"|bc`)
-	read -t $speed -s -n 1 key
+	error=$(read -t $speed -s -n 1 key 2>&1)
+	# 低版本 bash read 命令 timeout 不支持小数
+	if [ $? != 0 ] && [ "$error" != "" ];then
+		read -t 1 -s -n 1 key
+	fi
+
 	if [ $key ];then
 		if [ $key == "a" ];then
 			if [ $direction != "right" ];then
